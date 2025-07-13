@@ -1,0 +1,42 @@
+name: TSDM Auto Tasks
+
+on:
+  schedule:
+  #定时运行6h30m运行一次work
+  - cron: '30 */6 * * *'
+  #每天9点签到
+  - cron: '0 1 * * *' #东八区9点  
+  workflow_dispatch:
+
+jobs:
+  tsdm-tasks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install httpx beautifulsoup4
+
+      - name: Run Scheduled Task
+        env:
+          TSDM_COOKIE: ${{ secrets.TSDM_COOKIE }}
+        run: |
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            if [[ "${{ github.event.schedule }}" == "0 1 * * *" ]]; then
+              echo "Running daily check-in"
+              python tsdm.py checkin
+            elif [[ "${{ github.event.schedule }}" == "30 */6 * * *" ]]; then
+              echo "Running 6-hour work"
+              python tsdm.py work
+            fi
+          else
+            echo "Manual trigger - running both tasks"
+            python tsdm.py checkin
+            python tsdm.py work
+          fi
