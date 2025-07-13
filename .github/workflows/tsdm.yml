@@ -2,8 +2,8 @@ name: TSDM Auto Tasks
 
 on:
   schedule:
-  #定时运行6h30m运行一次work
-  - cron: '30 */6 * * *'
+  #定时运行打工
+  - cron: '0 */2 * * *'
   #每天9点签到
   - cron: '0 1 * * *' #东八区9点  
   workflow_dispatch:
@@ -31,7 +31,7 @@ jobs:
             if [[ "${{ github.event.schedule }}" == "0 1 * * *" ]]; then
               echo "Running daily check-in"
               python tsdm.py checkin
-            elif [[ "${{ github.event.schedule }}" == "30 */6 * * *" ]]; then
+            elif [[ "${{ github.event.schedule }}" == "0 */2 * * *" ]]; then
               echo "Running 6-hour work"
               python tsdm.py work
             fi
