@@ -3,7 +3,7 @@ name: TSDM Auto Tasks
 on:
   schedule:
   #定时运行打工
-  - cron: '0 */2 * * *'
+  - cron: '0 */1 * * *'
   #每天9点签到
   - cron: '0 1 * * *' #东八区9点  
   workflow_dispatch:
